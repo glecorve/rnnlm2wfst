@@ -1,0 +1,21 @@
+#TRAINING
+rnnlm -train examples/toy.train.norm -valid examples/toy.dev.norm -rnnlm examples/model.toy.lm lm -hidden 2 -rand-seed 1 -bptt 3 -debug 2 -class 1
+
+#CONVERT
+rnn2fst -rnnlm examples/model.toy.lm -fst examples/model.toy.fst
+
+#BUILD KMEANS
+perl bin/build_cluster_hierarchy.pl ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden10.model.trace 16 > ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden10.model.hierarchical.16
+
+#CLUSTER-BASED CONVERTION
+time bin/rnn2fst -rnnlm ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden10.model -fst /idiap/home/glecorve/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden10.hcluster1.pruned1e-4.bo-1.fst -discretize ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden10.model.hierarchical.1 -hcluster -prune 1e-3 -backoff 2
+
+for k in 2 4 8 16 32 64 128 256 512 1024 2048; do for delta in 1e-5 1e-6 1e-7; do echo "-------------------------------------------------------------------------------"; echo $k $delta ; echo ""; bin/rnn2fst -discretize /idiap/home/glecorve/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden100.model.trace.w_word_id.h1.${k} -hcluster -rnnlm ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden100.model -fst ~/data/rnnlm/simple-examples/models/test1.$k.p${delta}.entropy.fst -prune $delta ; done ; done
+
+bin/rnnlm -rnnlm ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden100.model -test ~/data/rnnlm/simple-examples/data/ptb.test.txt -debug 2 -discretize ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden100.model.trace.w_word_id.h32 | less
+
+~/programs/rnnlm-0.2b/bin/wfst-ppl -fst /idiap/home/glecorve/data/rnnlm/simple-examples/models/test1.4.p1e-5.entropy.fst -text ~/data/rnnlm/simple-examples/data/ptb.test.txt | less
+
+for k in 64 ; do for delta in 1e-5 1e-6 1e-7 ; do ppl=`~/programs/rnnlm-0.2b/bin/wfst-ppl -fst /idiap/home/glecorve/data/rnnlm/simple-examples/models/test1.$k.p${delta}.entropy.fst -text ../data/ptb.test.txt | tail -3 | head -1 | awk '{print $11}'` ; size=`~/lib/cpp/openfst/bin/fstinfo ~/data/rnnlm/simple-examples/models/test1.${k}.p${delta}.entropy.fst | grep "of arcs" | awk '{print $4}'` ; echo 1.$k $delta $ppl $size; done ; done
+
+delta=1e-6 ; bin/rnn2fst -discretize /idiap/home/glecorve/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden100.model.trace.w_word_id.h1024 -hcluster -rnnlm ~/data/rnnlm/simple-examples/models/ptb.rnn.class500.hidden100.model -fst ~/data/rnnlm/simple-examples/models/test1024.p${delta}.entropy.fst -prune $delta

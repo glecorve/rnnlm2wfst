@@ -1,0 +1,62 @@
+version: 10
+file format: 0
+
+training data file: examples/rnn2wfst.train.txt
+validation data file: examples/rnn2wfst.dev.txt
+
+last probability of validation data: -120.143684
+number of finished iterations: 5
+current position in training data: 0
+current probability of training data: -119.866157
+save after processing # words: 0
+# of training words: 612
+input layer size: 5
+hidden layer size: 2
+compression layer size: 0
+output layer size: 4
+direct connections: 0
+direct order: 3
+bptt: 4
+bptt block: 10
+vocabulary size: 3
+class size: 1
+old classes: 0
+independent sentences mode: 0
+starting learning rate: 0.100000
+current learning rate: 0.050000
+learning rate decrease: 1
+
+
+Vocabulary:
+     0	        68	</s>	0
+     1	       357	A	0
+     2	       187	B	0
+
+Hidden layer activation:
+0.5845
+0.6657
+
+Weights 0->1:
+0.3959
+1.5066
+-2.3334
+-0.6235
+-0.3968
+0.6970
+1.3429
+-2.5391
+-0.8330
+-0.5386
+
+
+Weights 1->2:
+-2.1533
+-2.1102
+1.3407
+0.9852
+0.9723
+1.3460
+0.0090
+-0.1117
+
+Direct connections:
