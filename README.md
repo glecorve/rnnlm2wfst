@@ -13,7 +13,7 @@ How to cite
 	@inproceedings{lecorve2012conversion,
 	  title={Conversion of recurrent neural network language models to weighted finite state transducers for automatic speech recognition},
 	  author={Lecorv{\'e}, Gw{\'e}nol{\'e} and Motlicek, Petr},
-	  booktitle={Thirteenth Annual Conference of the International Speech Communication Association},
+	  booktitle={Thirteenth Annual Conference of the International Speech Communication Association (Interspeech)},
 	  year={2012}
 	}
 
